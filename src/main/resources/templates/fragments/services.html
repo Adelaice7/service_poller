@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Service Poller</title>
+</head>
+<body>
+<main th:fragment="services">
+    <div class="vh-100 m-0 p-0">
+        <div class="services-list">
+            <h4 class="text-center">Services saved for { this.state.username }</h4>
+
+            <div class="container-fluid m-auto">
+                <div class="row p-1 service-holder font-weight-bold bg-dark text-light">
+                    <div class="col-sm-2 service-item service-name">Service Name</div>
+                    <div class="col-sm-5 service-item service-url">Service URL</div>
+                    <div class="col-sm-2 service-item service-time">Creation Time</div>
+                    <div class="col-sm-1 service-item service-state">State</div>
+                    <div class="col-sm-2 service-item buttons d-flex justify-content-end">
+                    </div>
+                </div>
+
+                <!--                Generate row for each service-->
+                <div class="row service-holder p-1 border-bottom-2">
+                    <div class="col-sm-2 font-weight-bold service-item service-name">{ this.state.service.name }
+                    </div>
+                    <div class="col-sm-5 service-item service-url">{ this.state.service.url }</div>
+                    <div class="col-sm-2 service-item service-time">{ this.state.service.timestamp }</div>
+                    <div class="col-sm-1 service-item service-state">{ this.state.service.status }</div>
+                    <div class="col-sm-2 service-item buttons d-flex justify-content-end">
+                        <button class="btn btn-warning edit-btn mx-2">Edit</button>
+                        <button class="btn btn-danger remove-btn ml-2 mr-0">Remove</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

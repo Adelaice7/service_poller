@@ -1,0 +1,26 @@
+version: '3'
+services:
+  database:
+    platform: linux/amd64
+    image: mysql:5.7
+    ports:
+      - "3309:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: dev
+      MYSQL_USER: dev
+      MYSQL_PASSWORD: secret
+    restart: always
+
+  app:
+    build:
+      dockerfile: docker/Dockerfile
+      context: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://database:3306/dev?serverTimezone=UTC&max_allowed_packet=15728640
+      - SPRING_DATASOURCE_USERNAME=dev
+      - SPRING_DATASOURCE_PASSWORD=secret

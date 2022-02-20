@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Service Poller</title>
+</head>
+<body>
+<header th:fragment="header" class="d-flex justify-content-between bg-secondary text-light">
+    <h2>Service Poller</h2>
+    <div class='user-container d-flex justify-content-between w-15' sec:authorize="isAnonymous()">
+        <button id="loginBtn" class="btn btn-info text-light">Login</button>
+    </div>
+    <div class='user-container d-flex justify-content-between w-15' sec:authorize="isAuthenticated()">
+        <button id="logoutBtn" class="btn btn-info text-light">Logout</button>
+    </div>
+</header>
+
+</body>
+</html>
