@@ -3,6 +3,7 @@ package com.rmeunier.servicepoller.rest;
 import com.rmeunier.servicepoller.model.Service;
 import com.rmeunier.servicepoller.service.ServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,9 +38,9 @@ public class ServiceRestController {
         return ResponseEntity.unprocessableEntity().body(null);
     }
 
-    @PostMapping("/users/{userId}/services/add")
+    @PostMapping(value ="/users/{userId}/services/add", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Service> addService(@PathVariable("userId") Long userId, @RequestBody Service service) {
-        Service s = serviceService.addService(service, userId);
+        Service s = serviceService.addService(userId, service);
 
         if (s != null) {
             return ResponseEntity.accepted().body(s);
@@ -47,7 +48,7 @@ public class ServiceRestController {
         return ResponseEntity.unprocessableEntity().body(null);
     }
 
-    @PutMapping("/users/services/{id}")
+    @PutMapping(value = "/users/services/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Service> updateService(@PathVariable("id") Long id, @RequestBody Service updatedService) {
         Service service = serviceService.updateService(id, updatedService);
         if (service != null) {
@@ -56,7 +57,7 @@ public class ServiceRestController {
         return ResponseEntity.unprocessableEntity().body(null);
     }
 
-    @DeleteMapping("/users/services/{id}")
+    @DeleteMapping(value = "/users/services/{id}")
     public boolean deleteService(@PathVariable("id") Long id) {
         return serviceService.deleteService(id);
     }

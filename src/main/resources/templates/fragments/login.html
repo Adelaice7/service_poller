@@ -5,19 +5,25 @@
     <title>Title</title>
 </head>
 <body>
-<main th:fragment="login" class="d-flex justify-content-center" sec:authorize="isAnonymous()">
-    <div class="w-25">
-        <form action="/login" method="POST">
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" class="form-control" id="username" placeholder="Enter username">
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" class="form-control" id="password" placeholder="Password">
-            </div>
-            <button type="submit" class="btn btn-primary mt-2">Submit</button>
-        </form>
+<main th:fragment="login">
+    <div class="d-flex flex-column justify-content-center">
+        <h2 class="text-center">Login</h2>
+        <p th:if="${loginError}" class="alert alert-danger">Wrong user or password</p>
+        <div class="w-30 d-flex justify-content-center mx-auto">
+            <form action="" method="POST" th:action="@{/login}">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" class="form-control" id="username" placeholder="Enter username" name="username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" placeholder="Password" name="password">
+                </div>
+                <div class="form-group text-center">
+                    <button type="submit" class="btn btn-primary mt-2">Submit</button>
+                </div>
+            </form>
+        </div>
     </div>
 </main>
 </body>

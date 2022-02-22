@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -43,9 +42,8 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public com.rmeunier.servicepoller.model.Service addService(com.rmeunier.servicepoller.model.Service service,
-                                                               Long userId) {
-        if (!urlValidator.isValidUrl(service.getUrl())) {
+    public com.rmeunier.servicepoller.model.Service addService(Long userId, com.rmeunier.servicepoller.model.Service service) {
+        if (!urlValidator.isValidService(service.getUrl())) {
             System.err.println("Invalid URL!");
             return null;
         }
@@ -63,7 +61,7 @@ public class ServiceServiceImpl implements ServiceService {
     @Override
     public com.rmeunier.servicepoller.model.Service updateService(Long id,
                                                                   com.rmeunier.servicepoller.model.Service updatedService) {
-        if (!urlValidator.isValidUrl(updatedService.getUrl())) {
+        if (!urlValidator.isValidService(updatedService.getUrl())) {
             System.err.println("Invalid URL provided in updated service!");
             return null;
         }
@@ -71,8 +69,6 @@ public class ServiceServiceImpl implements ServiceService {
         return serviceRepository.findById(id).map(service -> {
             service.setName(updatedService.getName());
             service.setUrl(updatedService.getUrl());
-            service.setStatus(updatedService.getStatus());
-            service.setTimestamp(updatedService.getTimestamp());
             return serviceRepository.save(service);
         }).orElse(null);
     }

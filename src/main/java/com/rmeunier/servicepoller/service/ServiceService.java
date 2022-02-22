@@ -9,7 +9,7 @@ public interface ServiceService {
     List<Service> getAllServicesByUserId(Long userId);
     Service getServiceById(Long id);
 
-    Service addService(Service service, Long userId);
+    Service addService(Long userId, Service service);
     Service updateService(Long id, Service updatedService);
     boolean deleteService(Long id);
     boolean deleteAllServicesOfUser(Long userId);

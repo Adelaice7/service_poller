@@ -1,17 +1,13 @@
 package com.rmeunier.servicepoller.service.impl;
 
 import com.rmeunier.servicepoller.service.PollerService;
+import com.rmeunier.servicepoller.service.RequestService;
 import com.rmeunier.servicepoller.service.ServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.time.Duration;
 
 @Service
 /**
@@ -22,10 +18,8 @@ public class PollerServiceImpl implements PollerService {
     @Autowired
     private ServiceService serviceService;
 
-    private final HttpClient httpClient = HttpClient.newBuilder()
-            .version(HttpClient.Version.HTTP_1_1)
-            .connectTimeout(Duration.ofSeconds(10))
-            .build();
+    @Autowired
+    private RequestService requestService;
 
     @Override
     public void pollAllServicesAndSave() {
@@ -39,28 +33,14 @@ public class PollerServiceImpl implements PollerService {
 
     @Override
     public String pollService(String urlStr) {
-        String serviceStatus = "";
+        HttpResponse response = requestService.requestUrL(urlStr);
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .GET()
-                .uri(URI.create(urlStr))
-                .build();
-
-        HttpResponse response;
-        try {
-            response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
+        if (response != null) {
             int statusCode = response.statusCode();
 
-            for (HttpStatus status : HttpStatus.values()) {
-                if (statusCode == status.value()) {
-                    serviceStatus = status.toString();
-                }
-            }
-        } catch (IOException | InterruptedException e) {
-            System.err.println("An error occurred polling the service!");
+            return HttpStatus.valueOf(statusCode).is2xxSuccessful() ? "OK" : "FAIL";
+        } else {
+            return "FAIL";
         }
-
-        return serviceStatus;
     }
 }

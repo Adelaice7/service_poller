@@ -18,6 +18,7 @@ public class User implements Serializable {
     private String username;
     private String email;
     private String password;
+    private String role;
 
     @OneToMany(mappedBy = "user" , fetch = FetchType.LAZY)
     @JsonIgnore
@@ -31,6 +32,14 @@ public class User implements Serializable {
         this.username = username;
         this.email = email;
         this.password = password;
+    }
+
+    public User(Long id, String username, String email, String password, String role) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.role = role;
     }
 
     public Long getId() {
@@ -73,6 +82,14 @@ public class User implements Serializable {
         this.services = services;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -80,6 +97,7 @@ public class User implements Serializable {
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
+                ", role='" + role + '\'' +
                 ", services=" + services +
                 '}';
     }

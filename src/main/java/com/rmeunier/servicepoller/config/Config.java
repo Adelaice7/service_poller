@@ -14,7 +14,6 @@ public class Config {
     @Autowired
     private PollerService pollerService;
 
-    // scheduled every minute
     @Async
     @Scheduled(fixedDelay = 60000)
     public void schedulePoller() {

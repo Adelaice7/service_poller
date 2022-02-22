@@ -9,7 +9,7 @@ It uses Java with the Spring framework, and a simple interface on the frontend t
 - User: `dev` Password: `secret`
 
 ## Run the application
-1. Build application jar using command `./gradlew bootJar`
+1. Build application jar using command `./gradlew build bootJar`
 2. Start up application with Docker using `docker-compose up --build`
 
 ## REST API Endpoints
