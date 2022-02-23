@@ -8,7 +8,8 @@
 <header th:fragment="header" class="d-flex justify-content-between bg-secondary text-light">
     <h2><a th:href="@{/}" class="text-light text-decoration-none"> Service Poller</a></h2>
     <div class='user-container d-flex justify-content-between w-15' sec:authorize="isAnonymous()">
-        <a id="loginBtn" class="btn btn-info text-light" th:href="@{/login}">Login</a>
+        <a id="loginBtn" class="btn btn-info text-light mx-1" th:href="@{/login}">Login</a>
+        <a id="registerBtn" class="btn btn-info text-light ml-2" th:href="@{/register}">Register</a>
     </div>
     <div class='user-container d-flex justify-content-between w-15' sec:authorize="isAuthenticated()">
         <a id="logoutBtn" class="btn btn-info text-light" th:href="@{/logout}">Logout</a>

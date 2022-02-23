@@ -8,7 +8,7 @@
 <main th:fragment="login">
     <div class="d-flex flex-column justify-content-center">
         <h2 class="text-center">Login</h2>
-        <p th:if="${loginError}" class="alert alert-danger">Wrong user or password</p>
+        <p th:if="${registerSuccess}" class="alert alert-success">Successful registration!</p>
         <div class="w-30 d-flex justify-content-center mx-auto">
             <form action="" method="POST" th:action="@{/login}">
                 <div class="form-group">
@@ -23,6 +23,10 @@
                     <button type="submit" class="btn btn-primary mt-2">Submit</button>
                 </div>
             </form>
+        </div>
+        <div class="mx-auto mt-3 d-flex flex-column">
+            <p>You don't have an account yet?</p>
+            <a id="registerBtn" class="btn btn-info text-light" th:href="@{/register}">Register</a>
         </div>
     </div>
 </main>

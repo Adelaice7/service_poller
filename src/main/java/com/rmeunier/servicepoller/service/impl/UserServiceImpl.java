@@ -4,6 +4,7 @@ import com.rmeunier.servicepoller.model.User;
 import com.rmeunier.servicepoller.repo.UserRepository;
 import com.rmeunier.servicepoller.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,8 +19,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
-//    @Autowired
-//    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public List<User> getAllUsers(String username) {
@@ -37,14 +38,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    @Override
     public User getUserById(Long id) {
         return userRepository.findById(id).orElse(null);
     }
 
     @Override
     public User addUser(User user) {
-        user.setRole("ROLE_USER");
-//        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -53,7 +58,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(id).map(user -> {
             user.setUsername(updatedUser.getUsername());
             user.setEmail(updatedUser.getEmail());
-//            user.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+            user.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
             user.setPassword(updatedUser.getPassword());
             return userRepository.save(user);
         }).orElse(null);

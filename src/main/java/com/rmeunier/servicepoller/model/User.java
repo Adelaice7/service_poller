@@ -3,14 +3,13 @@ package com.rmeunier.servicepoller.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
-public class User implements Serializable {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,7 +17,6 @@ public class User implements Serializable {
     private String username;
     private String email;
     private String password;
-    private String role;
 
     @OneToMany(mappedBy = "user" , fetch = FetchType.LAZY)
     @JsonIgnore
@@ -34,12 +32,11 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public User(Long id, String username, String email, String password, String role) {
-        this.id = id;
+    public User(String username, String email, String password, Set<Service> services) {
         this.username = username;
         this.email = email;
         this.password = password;
-        this.role = role;
+        this.services = services;
     }
 
     public Long getId() {
@@ -82,14 +79,6 @@ public class User implements Serializable {
         this.services = services;
     }
 
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
     @Override
     public String toString() {
         return "User{" +
@@ -97,7 +86,6 @@ public class User implements Serializable {
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", role='" + role + '\'' +
                 ", services=" + services +
                 '}';
     }

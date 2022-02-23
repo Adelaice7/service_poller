@@ -51,18 +51,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/js/**", "/css/**").anonymous()
-                .antMatchers("/**", "/login*").anonymous()
-                .antMatchers("/users/add", "/users").anonymous()
+                .antMatchers("/js/**", "/css/**").permitAll()
+                .antMatchers("/**", "/login*").permitAll()
+                .antMatchers("/users/add", "/users").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .loginPage("/login").permitAll()
+                .loginPage("/login")
                 .and()
-                .httpBasic();
-//                .defaultSuccessUrl("/", true)
-//                .and()
-//                .logout()
-//                .logoutUrl("/logout");
+                .logout().logoutSuccessUrl("/");
     }
 }

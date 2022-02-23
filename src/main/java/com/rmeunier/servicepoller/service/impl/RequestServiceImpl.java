@@ -1,6 +1,8 @@
 package com.rmeunier.servicepoller.service.impl;
 
 import com.rmeunier.servicepoller.service.RequestService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -12,6 +14,8 @@ import java.time.Duration;
 
 @Service
 public class RequestServiceImpl implements RequestService {
+
+    private static final Logger logger = LoggerFactory.getLogger(RequestServiceImpl.class);
 
     private final HttpClient httpClient = HttpClient.newBuilder()
             .version(HttpClient.Version.HTTP_1_1)
@@ -29,7 +33,7 @@ public class RequestServiceImpl implements RequestService {
         try {
             return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException e) {
-            System.err.println("An error occurred polling the service!");
+            logger.error("An error occurred polling the service!");
         }
 
         return null;

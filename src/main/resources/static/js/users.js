@@ -1,33 +1,37 @@
 import axios from 'axios';
 
-document.addEventListener("DOMContentLoaded", function (event) {
-    const USERS_REST_API_ENDPOINT = window.location.href + '/users';
+const USERS_REST_API_ENDPOINT = window.location.href + '/users';
 
-    function getUsers() {
-        return axios.get(USERS_REST_API_ENDPOINT);
-    }
-
-    function getUser(id) {
-        return axios.get(USERS_REST_API_ENDPOINT + '/' + id);
-    }
-
-    function addUser(user) {
-        return axios.post(USERS_REST_API_ENDPOINT + '/add', {
-            user: user
+/* Requests to the REST API */
+function getUsers(username) {
+    if (username !== undefined) {
+        return axios.get(USERS_REST_API_ENDPOINT, {
+            params: { 'username': username }
         });
     }
+    return axios.get(USERS_REST_API_ENDPOINT);
+}
 
-    function updateUser(userId, updatedUser) {
-        return axios.put(USERS_REST_API_ENDPOINT + '/' + userId, {
-            user: updatedUser
-        });
-    }
+function getUser(id) {
+    return axios.get(USERS_REST_API_ENDPOINT + '/' + id);
+}
 
-    function deleteUser(id) {
-        return axios.delete(USERS_REST_API_ENDPOINT + '/' + id);
-    }
+function addUser(user) {
+    return axios.post(USERS_REST_API_ENDPOINT + '/add', {
+        user: user
+    });
+}
 
-    function deleteAllUsers() {
-        return axios.delete(USERS_REST_API_ENDPOINT + '/deleteAll');
-    }
-});
+function updateUser(userId, updatedUser) {
+    return axios.put(USERS_REST_API_ENDPOINT + '/' + userId, {
+        user: updatedUser
+    });
+}
+
+function deleteUser(id) {
+    return axios.delete(USERS_REST_API_ENDPOINT + '/' + id);
+}
+
+function deleteAllUsers() {
+    return axios.delete(USERS_REST_API_ENDPOINT + '/deleteAll');
+}

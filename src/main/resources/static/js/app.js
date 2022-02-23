@@ -1,5 +1,7 @@
 import '../../../../../node_modules/datatables.net/js/jquery.dataTables.min';
 import '../../../../../node_modules/datatables.net-buttons/js/dataTables.buttons.min';
+import './poller';
+import './alerts';
 import './services';
 import './users';
 
