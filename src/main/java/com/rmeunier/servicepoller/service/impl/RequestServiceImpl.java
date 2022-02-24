@@ -12,6 +12,9 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 
+/*
+This service is responsible for some HTTP requests using the Java 11 Http Client.
+ */
 @Service
 public class RequestServiceImpl implements RequestService {
 

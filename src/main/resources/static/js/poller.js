@@ -4,6 +4,7 @@ const axios = require('axios');
 const $ = require("jquery");
 
 const API_URL = window.location.href;
+export const POLLER_SCHEDULE_TIME = 60000;
 
 export function pollAllServices() {
     return axios.get(API_URL + 'pollServices')
@@ -20,10 +21,11 @@ export function pollService(serviceId) {
     return axios.post(API_URL + 'pollService/' + serviceId);
 }
 
+setInterval(pollAllServices, POLLER_SCHEDULE_TIME);
+
 /**
  * Polls
  */
 $(document).ready(() => {
     pollAllServices();
-    setInterval(pollAllServices, 60000);
 });

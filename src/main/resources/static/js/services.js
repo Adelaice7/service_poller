@@ -1,7 +1,4 @@
-// import {createAlert} from "./alerts";
-// import {pollService} from "./poller";
-
-import {pollService} from "./poller";
+import {POLLER_SCHEDULE_TIME, pollService} from "./poller";
 import './alerts';
 import {createAlert} from "./alerts";
 
@@ -9,14 +6,23 @@ const axios = require('axios');
 const $ = require("jquery");
 
 const API_URL = window.location.href;
-let services = [...new Set()];
+let services = [];
 
-function Service(id, name, url, timestamp, status) {
-    this.id = id;
-    this.name = name;
-    this.url = url;
-    this.timestamp = timestamp;
-    this.status = status;
+/**
+ * Finds element in services array based on service ID.
+ * @param serviceId the ID of the service to search for
+ * @returns the element with the id attr matching serviceID
+ */
+function getServiceFromArray(serviceId) {
+    return services.find(service => service["id"] == serviceId);
+}
+
+/**
+ * Removes element in services array based on service ID.
+ * @param serviceId the ID of the service to be removed
+ */
+function removeServiceFromArray(serviceId) {
+    services = services.filter((s) => s["id"] !== serviceId);
 }
 
 /* Requests to the REST API */
@@ -43,9 +49,16 @@ function deleteService(serviceId) {
 /* -------------- Render services -------------- */
 
 $(document).ready(() => {
+
     if (currentUserId === null || currentUserId === undefined) {
         console.error('The user ID does not exist!');
     }
+
+    getServicesOfUser(currentUserId).then((res) => {
+        services = res.data;
+    }).catch((err) => {
+        createAlert('Error occurred getting the services data!<br/>' + err);
+    });
 
     /* Using an ajax request, it queries the services belonging to current user based on user ID,
     * then shows them in a table. */
@@ -62,11 +75,9 @@ $(document).ready(() => {
             {
                 data: null,
                 render: (data) => {
-                    const service = new Service(data['id'], data['name'], data['url'], data['timestamp'], data['status']);
-                    services[data['id']] = service;
-                    return '<button type="button" value="' + service.id + '" class="btn btn-warning service-edit-btn mx-2" ' +
+                    return '<button type="button" value="' + data['id'] + '" class="btn btn-warning service-edit-btn mx-2" ' +
                         'data-bs-toggle="modal" data-bs-target="#editServiceModal" data-bs-dismiss="modal">Edit</button>' +
-                        '<button type="button" value="' + service.id + '" class="btn btn-danger service-remove-btn ml-2 mr-0" ' +
+                        '<button type="button" value="' + data['id'] + '" class="btn btn-danger service-remove-btn ml-2 mr-0" ' +
                         'data-bs-toggle="modal" data-bs-target="#removeServiceModal" data-bs-dismiss="modal">Remove</button>'
                 }
             },
@@ -101,22 +112,28 @@ $(document).ready(() => {
      * sends a request with the data, and then shows alert afterwards.
      */
     function addService() {
-        $('#addCurrServiceBtn').on('click', (e) => {
+        $('#addCurrServiceBtn').on('click', () => {
             let service = {
                 "name": $('#serviceNameInput').val(),
                 "url": $('#serviceUrlInput').val()
             }
 
             addServiceToUser(currentUserId, service).then((res) => {
-                createAlert('Successfully added service!', 'success');
-                pollService(service.id).then((res) => {
+                // adding result service to the array
+                const addedService = res.data;
+                services.push(addedService);
+
+                // polling service
+                pollService(service["id"]).then(() => {
                     $('#servicesTable').DataTable().ajax.reload()
                 }).catch((err) => {
                     createAlert('Could not poll added service!<br/>' + err, 'error');
+                }).finally(() => {
+                    createAlert('Successfully added service!', 'success');
                 });
+
             }).catch((err) => {
                 createAlert('Error occurred adding service!<br/>' + err, 'error');
-                $('#servicesTable').DataTable().ajax.reload()
             });
         });
     }
@@ -127,27 +144,43 @@ $(document).ready(() => {
      * @param serviceId
      */
     function editService(serviceId) {
-        const oldService = services[serviceId];
+        const oldService = getServiceFromArray(serviceId);
 
-        $('#serviceNameEditInput').val(oldService.name);
-        $('#serviceUrlEditInput').val(oldService.url);
+        $('#serviceNameEditInput').val(oldService["name"]);
+        $('#serviceUrlEditInput').val(oldService["url"]);
 
         $('#editCurrServiceBtn').on('click', (e) => {
+            // do not send default form
             e.preventDefault();
-            $('#editServiceForm').serialize();
 
+            // creating updated service
             let updatedService = {
-                'id': oldService.id,
-                'name': $('#serviceNameEditInput').val(),
-                'url': $('#serviceUrlEditInput').val()
+                "id": "",
+                "name": "",
+                "url": ""
             };
 
-            updateService(oldService.id, updatedService).then((resp) => {
-                createAlert('Successfully edited service!', 'success');
+            updatedService["id"] = oldService["id"];
+            updatedService["name"] = $('#serviceNameEditInput').val();
+            updatedService["url"] = $('#serviceUrlEditInput').val();
+
+            updateService(oldService["id"], updatedService).then((res) => {
+                // adding result service to the array
+                let savedService = res.data;
+                removeService(oldService["id"]);
+                services.push(savedService);
+
+                // polling updated service
+                pollService(savedService["id"]).then(() => {
+                    $('#servicesTable').DataTable().ajax.reload()
+                }).catch((err) => {
+                    createAlert('Could not poll added service!<br/>' + err, 'error');
+                }).finally(() => {
+                    createAlert('Successfully edited service!', 'success');
+                });
+
             }).catch((err) => {
                 createAlert('Error occurred editing service!<br/>' + err, 'error');
-            }).finally(() => {
-                $('#servicesTable').DataTable().ajax.reload();
             });
         });
     }
@@ -158,16 +191,24 @@ $(document).ready(() => {
      * @param serviceId the ID of the service to remove.
      */
     function removeService(serviceId) {
+
         $('#rmCurrServiceBtn').on('click', (e) => {
-            deleteService(serviceId).then((response) => {
-                // remove from array
-                services.filter(service => service !== serviceId);
+            // do not send default form
+            e.preventDefault();
+
+            deleteService(serviceId).then(() => {
+
+                // removing existing service from array
+                let service = getServiceFromArray(serviceId);
+                removeServiceFromArray(service["id"]);
+
                 createAlert('Successfully removed service!', 'success');
             }).catch((err) => {
                 createAlert('Error occurred removing service!<br/>' + err, 'error');
             }).finally(() => {
                 $('#servicesTable').DataTable().ajax.reload();
             });
+
         });
     }
 
@@ -178,6 +219,6 @@ $(document).ready(() => {
     function reloadServiceTable() {
         setInterval(() => {
             $('#servicesTable').DataTable().ajax.reload();
-        }, 60000);
+        }, POLLER_SCHEDULE_TIME);
     }
 });

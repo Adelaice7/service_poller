@@ -1,8 +1,13 @@
 # Service Poller - Assignment
 
 ### Notes
-- The MySQL server is running on port `3309` outside of the container.
-- User: `dev` Password: `secret`
+- The MySQL server is running on port `3309` outside of the container. User: `dev` Password: `secret`.
+- 
+
+### Pre-existing data in the DB
+
+1. Username: `user` Password: `user` -- With 3 services added.
+2. Username: `user2` Password: `user2` -- With 5 services added.
 
 ## Run the application
 1. Build application jar using command `./gradlew build bootJar`
@@ -20,7 +25,7 @@ I used Spring Security for authenticating the user, implementing the authenticat
 I use the Security features in Spring and Thymeleaf to connect the user authentication to the front end.
 There are two models that I created: the User and the Service models.
 Services are tied to users, as in a User owns a set of Services.
-A user can register, which gets stored in the database, and log in to see their services. Services can be added 
+A user can register, then gets stored in the database, and log in to see their services. Services can be added 
 to each user through the REST API or the GUI. There are endpoints and GUI options to edit and remove services.
 Since services belong to users, along with the user authentication, there is support for multiple users.
 
@@ -41,7 +46,8 @@ The application provides multiple REST API endpoints to interact with the databa
 2. `GET /users/{userId}/services` Gets the services of a given user based on the provided `userId`
 3. `POST /users/{userId}/services/add` Adds the `service` provided in the request body to the user of `userId`
 4. `PUT /users/services/{id}` Updates the service given by `id` with the `updatedService` provided in the request body. 
-5. `DELETE /users/services/{id}` Deletes service of given `id`
+5. `DELETE /users/services/{id}` Deletes service of given `id`.
+6. `DELETE /users/{userId}/services` Deletes all services of given user based on `userId`.
 
 ### User endpoints
 1. `GET /users` Gets the list of all users. There is an optional request parameter `username` to find a given user.
@@ -64,6 +70,7 @@ used along Thymeleaf and Spring templates, and I wanted to end up with shorter c
 
 I used Bootstrap for some easy, basic styling, and also the plugin `DataTables` for rendering the Services table.
 The original request upon loading the page uses an AJAX request, but the majority of the requests are handled by `axios`.
+DataTables allows the user to sort the list of services according to any columns by clicking on the column headers.
 
 The added services get separately polled, but globally, all services are polled every 60 seconds.
 
@@ -74,7 +81,7 @@ There are also templates for a login page and a registration page respectively. 
 
 I would love to use React JS to give a proper frontend to the application with prettier results.
 
-Some asynchronous implementations need to be realized in order to cover the unexpected behaviors of the service polling.
+Some asynchronous implementations need to be realized in order to handle the unexpected behaviors of the service polling.
 
 Thymeleaf templates could be improved by the templates and fragments being called  in the controllers,
 thus requiring less HTML templates.

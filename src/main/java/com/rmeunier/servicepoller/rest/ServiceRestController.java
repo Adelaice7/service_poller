@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-/**
+/*
  * REST API endpoints for sending Service requests.
  */
 public class ServiceRestController {
@@ -51,6 +51,7 @@ public class ServiceRestController {
     @PutMapping(value = "/users/services/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Service> updateService(@PathVariable("id") Long id, @RequestBody Service updatedService) {
         Service service = serviceService.updateService(id, updatedService);
+        System.out.println("Service " + updatedService);
         if (service != null) {
             return ResponseEntity.accepted().body(service);
         }
@@ -60,5 +61,10 @@ public class ServiceRestController {
     @DeleteMapping(value = "/users/services/{id}")
     public boolean deleteService(@PathVariable("id") Long id) {
         return serviceService.deleteService(id);
+    }
+
+    @DeleteMapping(value = "/users/{userId}/services")
+    public boolean deleteAllServicesOfUser(@PathVariable("userId") Long userId) {
+        return serviceService.deleteAllServicesOfUser(userId);
     }
 }

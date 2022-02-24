@@ -13,10 +13,10 @@ import org.springframework.stereotype.Service;
 import java.net.http.HttpResponse;
 import java.util.List;
 
-@Service
 /*
  * This service is responsible for the polling of all stored URLs.
  */
+@Service
 public class PollerServiceImpl implements PollerService {
 
     private static final Logger logger = LoggerFactory.getLogger(PollerServiceImpl.class);

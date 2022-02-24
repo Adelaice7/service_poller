@@ -10,10 +10,10 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
 /**
  * This service is responsible for communicating with the repository of the User objects.
  */
+@Service
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -76,3 +76,4 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 }
+
