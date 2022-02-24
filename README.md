@@ -2,12 +2,8 @@
 
 ### Notes
 - The MySQL server is running on port `3309` outside of the container. User: `dev` Password: `secret`.
-- 
-
-### Pre-existing data in the DB
-
-1. Username: `user` Password: `user` -- With 3 services added.
-2. Username: `user2` Password: `user2` -- With 5 services added.
+- I ended up not including pre-existing test data in the database, but this can be easily added over the REST API or 
+the GUI.
 
 ## Run the application
 1. Build application jar using command `./gradlew build bootJar`
@@ -79,11 +75,13 @@ There are also templates for a login page and a registration page respectively. 
 
 ## Ideas to improve
 
-I would love to use React JS to give a proper frontend to the application with prettier results.
+- I would love to use React JS to give a proper frontend to the application with prettier results.
 
-Some asynchronous implementations need to be realized in order to handle the unexpected behaviors of the service polling.
+- Some asynchronous implementations need to be realized in order to handle the unexpected behaviors of the service polling.
 
-Thymeleaf templates could be improved by the templates and fragments being called  in the controllers,
+- Thymeleaf templates could be improved by the templates and fragments being called  in the controllers,
 thus requiring less HTML templates.
 
-Less mixing of Spring/Thymeleaf based behavior in the frontend.
+- Less mixing of Spring/Thymeleaf based behavior in the frontend.
+
+- There might be some issues with starting up the DB for the first time, and the app initializing sooner than the DB.
