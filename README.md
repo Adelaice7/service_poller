@@ -1,4 +1,4 @@
-# Service Poller - Assignment
+# Service Poller
 
 ### Notes
 - The MySQL server is running on port `3309` outside of the container. User: `dev` Password: `secret`.
